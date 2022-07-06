@@ -12,7 +12,7 @@
 
     <style>
         .container {
-            width: calc(50% - 15px);
+            width: 500px;
             height: 400px;
             margin: auto;
         }
@@ -47,6 +47,31 @@
             width: inherit;
             background-color: green;
             position: fixed;
+        }
+
+
+
+
+
+
+
+
+
+
+
+        .container2 {
+           display: flex;
+            width: 500px;
+            height: 200px;
+            overflow-y: scroll;
+            flex-direction: column;
+            flex-wrap: wrap;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .container2 div {
+            width: 500px;
         }
     </style>
 </head>
@@ -99,6 +124,60 @@
         unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
         recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
     </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+    <div id="container2" class="container2 custom-scrollbar">
+        <div>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+        book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+        unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+        recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
+        <div>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+        book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+        unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+        recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
+        <div>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+        book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+        unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+        recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
+        <div>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+        book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+        unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+        recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
+        <div>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+        book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+        unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+        recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
+        <div>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+        book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+        unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+        recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
+        <div>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+        book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+        unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+        recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
+        <div>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+        book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+        unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+        recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
+        <div>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+        book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+        unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+        recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
+    </div>
 </body>
 
 
@@ -106,6 +185,7 @@
 
 const CLASS_NAME_THUMB_Y = "custom-scrollbar-scroll-thumb";
 const CLASS_NAME_SCROLBAR_Y = "custom-scrollbar-scroll";
+const SPACE_FOR_SCROLLBAR = 2 * 15;
 
 var scrollbarDataIn = {
     "#container": {
@@ -115,6 +195,7 @@ var scrollbarDataIn = {
         mouseStartX: 0,
         translationY: 0,
         mouseStartY: 0,
+        changeEvent: false
     }
 }
 
@@ -126,13 +207,22 @@ function initScrollBar() {
 
     for (let i = 0; i < scrollbarDataInKeys.length; i++) {
         if (document.querySelector(scrollbarDataInKeys[i])) {
-           createCustomScroll(scrollbarDataInKeys[i])
+           createCustomScroll_Y(scrollbarDataInKeys[i])
+           observerContentToAutoScroll(scrollbarDataInKeys[i])
         }
     }
 }
 
-function createCustomScroll(nameOfElement) {
+function createCustomScroll_Y(nameOfElement) {
     let element = document.querySelector(nameOfElement);
+
+    if ((element.scrollHeight - element.offsetHeight) == 0) {
+        return ;
+    }
+
+    addCss2Element(element, {
+        width: element.offsetWidth - SPACE_FOR_SCROLLBAR + "px"
+    })
 
     element.innerHTML += 
     `
@@ -194,7 +284,6 @@ function addMouseEventsToScrollbar(nameOfElement) {
     addListenerMulti(scrollbarThumb, 'mousedown touchstart', function (e) {
         scrollbarDataIn[nameOfElement].isMousedownActive = true;
         scrollbarDataIn[nameOfElement].isMousemoveActive = false;
-        scrollbarDataIn[nameOfElement].mouseStartX = pointerEventToXY(e).x;
         scrollbarDataIn[nameOfElement].mouseStartY = pointerEventToXY(e).y;
     });
 
