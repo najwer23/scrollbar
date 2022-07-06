@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html lang="PL">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="author" content="Mariusz Najwer">
+    <meta name="description" content="Scrollbar" />
+    <meta name="keywords" content="Mariusz Najwer, najwer23" />
+    <title>Scrollbar</title>
+
+    <style>
+        .container {
+            width: calc(50% - 15px);
+            height: 400px;
+            margin: auto;
+        }
+
+
+    
+
+        
+        .custom-scrollbar {
+            overflow-y: scroll;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            position: relative;
+            padding-right: 15px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            -webkit-appearance: none;
+        }
+
+        .custom-scrollbar-scroll {
+            width: 10px;
+            background-color: red;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+        .custom-scrollbar-scroll-thumb {
+            width: inherit;
+            background-color: green;
+            position: fixed;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container" class="container custom-scrollbar">
+        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+        book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+        unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+        recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+        book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+        unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+        recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+        book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+        unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+        recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+        book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+        unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+        recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+        book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+        unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+        recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+        book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+        unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+        recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+        book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+        unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+        recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+        book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+        unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+        recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard
+        dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen
+        book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially
+        unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more
+        recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+    </div>
+</body>
+
+
+<script>
+
+let divWithCustomScroll = document.querySelector("#container")
+
+createCustomScroll(divWithCustomScroll)
+
+function createCustomScroll(element) {
+    element.innerHTML += 
+    `
+        <div class="custom-scrollbar-scroll">
+            <div class="custom-scrollbar-scroll-thumb"></div>
+        </div>
+    `; 
+
+    calculateScrollBar(element)
+    calculateThumb(element)
+
+    element.addEventListener("scroll", function (e) {
+        calculateThumb(this)
+    })
+
+    window.addEventListener("resize", function (e) {
+        calculateScrollBar(element)
+        calculateThumb(element)
+    })
+}
+
+function calculateScrollBar(element) {
+    addCss2Element(element.querySelector(".custom-scrollbar-scroll"), {
+        height: 0 + "px"
+    })
+    addCss2Element(element.querySelector(".custom-scrollbar-scroll"), {
+        height: element.scrollHeight + "px"
+    })
+}
+
+function calculateThumb(element) {
+    let thumbMarginTop = element.scrollTop / element.scrollHeight * element.offsetHeight;
+    let thumbHeight = element.offsetHeight * element.offsetHeight / element.scrollHeight;
+
+    addCss2Element(element.querySelector(".custom-scrollbar-scroll-thumb"), {
+        marginTop: thumbMarginTop + "px",
+        height: thumbHeight + "px"
+    })
+}
+
+function addCss2Element(element, style) {
+    for (const property in style) element.style[property] = style[property];
+}
+
+</script>
+
+</html>
