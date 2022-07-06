@@ -202,7 +202,12 @@ function addMouseEventsToScrollbar(nameOfElement) {
     };
 
     const scrollbarThumb = document.querySelector(nameOfElement + ` .${CLASS_NAME_THUMB_Y}`);
+    const scrollbar = document.querySelector(nameOfElement + ` .${CLASS_NAME_SCROLBAR_Y}`);
     const scrollbarContent = document.querySelector(nameOfElement);
+
+    addListenerMulti(scrollbar, 'mousedown touchstart', function (e) {
+        calculateScrollThmubByMouse(e);
+    });
 
     addListenerMulti(scrollbarThumb, 'mousedown touchstart', function (e) {
         scrollbarDataIn[nameOfElement].isMousedownActive = true;
@@ -222,14 +227,17 @@ function addMouseEventsToScrollbar(nameOfElement) {
     addListenerMulti(window, 'mousemove touchmove', function (e) {
         if (scrollbarDataIn[nameOfElement].isMousedownActive) {
             e.preventDefault();
-            scrollbarDataIn[nameOfElement].isMousemoveActive = true;
-
-            const momentumY = scrollbarContent.scrollHeight / scrollbarContent.offsetHeight
-            scrollbarDataIn[nameOfElement].translationY = ((pointerEventToXY(e).y - scrollbarDataIn[nameOfElement].mouseStartY) * momentumY) +  scrollbarContent.scrollTop;           
-            scrollbarContent.scrollTop = scrollbarDataIn[nameOfElement].translationY
-            scrollbarDataIn[nameOfElement].mouseStartY = pointerEventToXY(e).y;
+            calculateScrollThmubByMouse(e);
         }
     });
+
+    function calculateScrollThmubByMouse(e) {
+        scrollbarDataIn[nameOfElement].isMousemoveActive = true;
+        const momentumY = scrollbarContent.scrollHeight / scrollbarContent.offsetHeight
+        scrollbarDataIn[nameOfElement].translationY = ((pointerEventToXY(e).y - scrollbarDataIn[nameOfElement].mouseStartY) * momentumY) + scrollbarContent.scrollTop;
+        scrollbarContent.scrollTop = scrollbarDataIn[nameOfElement].translationY
+        scrollbarDataIn[nameOfElement].mouseStartY = pointerEventToXY(e).y;
+    }
 }
 
 function addListenerMulti(el, s, fn) {
