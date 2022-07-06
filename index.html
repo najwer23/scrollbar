@@ -131,7 +131,6 @@ function initScrollBar() {
     for (let i = 0; i < scrollbarDataInKeys.length; i++) {
         if (document.querySelector(scrollbarDataInKeys[i])) {
            createCustomScroll_Y(scrollbarDataInKeys[i])
-           observerContentToAutoScroll(scrollbarDataInKeys[i])
         }
     }
 }
