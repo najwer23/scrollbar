@@ -104,15 +104,40 @@
 
 <script>
 
-let divWithCustomScroll = document.querySelector("#container")
+const CLASS_NAME_THUMB_Y = "custom-scrollbar-scroll-thumb";
+const CLASS_NAME_SCROLBAR_Y = "custom-scrollbar-scroll";
 
-createCustomScroll(divWithCustomScroll)
+var scrollbarDataIn = {
+    "#container": {
+        isMousedownActive: false,
+        isMousemoveActive: false,
+        translationX: 0,
+        mouseStartX: 0,
+        translationY: 0,
+        mouseStartY: 0,
+    }
+}
 
-function createCustomScroll(element) {
+initScrollBar()
+
+
+function initScrollBar() {
+    let scrollbarDataInKeys = Object.keys(scrollbarDataIn)
+
+    for (let i = 0; i < scrollbarDataInKeys.length; i++) {
+        if (document.querySelector(scrollbarDataInKeys[i])) {
+           createCustomScroll(scrollbarDataInKeys[i])
+        }
+    }
+}
+
+function createCustomScroll(nameOfElement) {
+    let element = document.querySelector(nameOfElement);
+
     element.innerHTML += 
     `
-        <div class="custom-scrollbar-scroll">
-            <div class="custom-scrollbar-scroll-thumb"></div>
+        <div class="${CLASS_NAME_SCROLBAR_Y}">
+            <div class="${CLASS_NAME_THUMB_Y}"></div>
         </div>
     `; 
 
@@ -127,13 +152,15 @@ function createCustomScroll(element) {
         calculateScrollBar(element)
         calculateThumb(element)
     })
+
+    addMouseEventsToScrollbar(nameOfElement)
 }
 
 function calculateScrollBar(element) {
-    addCss2Element(element.querySelector(".custom-scrollbar-scroll"), {
+    addCss2Element(element.querySelector(`.${CLASS_NAME_SCROLBAR_Y}`), {
         height: 0 + "px"
     })
-    addCss2Element(element.querySelector(".custom-scrollbar-scroll"), {
+    addCss2Element(element.querySelector(`.${CLASS_NAME_SCROLBAR_Y}`), {
         height: element.scrollHeight + "px"
     })
 }
@@ -142,7 +169,7 @@ function calculateThumb(element) {
     let thumbMarginTop = element.scrollTop / element.scrollHeight * element.offsetHeight;
     let thumbHeight = element.offsetHeight * element.offsetHeight / element.scrollHeight;
 
-    addCss2Element(element.querySelector(".custom-scrollbar-scroll-thumb"), {
+    addCss2Element(element.querySelector(`.${CLASS_NAME_THUMB_Y}`), {
         marginTop: thumbMarginTop + "px",
         height: thumbHeight + "px"
     })
@@ -152,6 +179,50 @@ function addCss2Element(element, style) {
     for (const property in style) element.style[property] = style[property];
 }
 
+function addMouseEventsToScrollbar(nameOfElement) {
+    const pointerEventToXY = function (e) {
+        let isTouch = e.type.includes("touch");
+        return {
+            x: isTouch ? e.changedTouches[0].pageX : e.pageX,
+            y: isTouch ? e.changedTouches[0].pageY : e.pageY
+        };
+    };
+
+    const scrollbarThumb = document.querySelector(nameOfElement + ` .${CLASS_NAME_THUMB_Y}`);
+    const scrollbarContent = document.querySelector(nameOfElement);
+
+    addListenerMulti(scrollbarThumb, 'mousedown touchstart', function (e) {
+        scrollbarDataIn[nameOfElement].isMousedownActive = true;
+        scrollbarDataIn[nameOfElement].isMousemoveActive = false;
+        scrollbarDataIn[nameOfElement].mouseStartX = pointerEventToXY(e).x;
+        scrollbarDataIn[nameOfElement].mouseStartY = pointerEventToXY(e).y;
+    });
+
+    addListenerMulti(window, 'mouseleave touchcancel', function (e) {
+        scrollbarDataIn[nameOfElement].isMousedownActive = false;
+    });
+
+    addListenerMulti(window, 'mouseup touchend', function (e) {
+        scrollbarDataIn[nameOfElement].isMousedownActive = false;
+        scrollbarDataIn[nameOfElement].isMousemoveActive = false;
+    });
+
+    addListenerMulti(window, 'mousemove touchmove', function (e) {
+        if (scrollbarDataIn[nameOfElement].isMousedownActive) {
+            e.preventDefault();
+            scrollbarDataIn[nameOfElement].isMousemoveActive = true;
+
+            const momentumY = scrollbarContent.scrollHeight / scrollbarContent.offsetHeight
+            scrollbarDataIn[nameOfElement].translationY = ((pointerEventToXY(e).y - scrollbarDataIn[nameOfElement].mouseStartY) * momentumY) +  scrollbarContent.scrollTop;           
+            scrollbarContent.scrollTop = scrollbarDataIn[nameOfElement].translationY
+            scrollbarDataIn[nameOfElement].mouseStartY = pointerEventToXY(e).y;
+        }
+    });
+}
+
+function addListenerMulti(el, s, fn) {
+    s.split(' ').forEach(e => el.addEventListener(e, fn, false));
+}
 </script>
 
 </html>
