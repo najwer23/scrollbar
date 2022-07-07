@@ -23,16 +23,19 @@
         
         .custom-scrollbar {
             overflow-y: scroll;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
             position: relative;
             padding-right: 15px;
+            
+            -ms-overflow-style: none;
+            overflow: -moz-scrollbars-none;
+            scrollbar-width: none;
         }
 
         .custom-scrollbar::-webkit-scrollbar {
-            width: 0;
-            height: 0;
-            -webkit-appearance: none;
+            -webkit-appearance: none !important;
+            width: 0 !important;
+            height: 0 !important;
+            display: none;
         }
 
         .custom-scrollbar-scroll {
